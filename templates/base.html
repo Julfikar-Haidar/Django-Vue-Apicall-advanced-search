@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <link rel="canonical" href="https://getbootstrap.com/docs/3.3/examples/starter-template/">
+
+    <title>Chondokotha-App</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="https://getbootstrap.com/docs/3.3/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="https://getbootstrap.com/docs/3.3/examples/starter-template/starter-template.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="https://getbootstrap.com/docs/3.3/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Chondokotha-App</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+<br><br>
+<div class="container" id="app">
+
+    <div class="row">
+        <form action="#">
+            <div class="col-md-3">
+
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1" style="color: black">Division Select</label>
+                    <select class="form-control" id="exampleFormControlSelect1" v-model="form_data.division" @change="getDistricts()">
+                        <option value="0"> Division Select</option>
+
+                        <option v-bind:value="division.id" v-for="division in divisions" :key="division.id">
+                            [[division.name]]
+                        </option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="col-md-3">
+
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1" style="color: black">Districts Select</label>
+                    <select class="form-control" id="exampleFormControlSelect1" v-model="form_data.district">
+                        <option value="" selected="selected">Selected Districts</option>
+                        <option v-bind:value="district.id" v-for="district in districts" :key="district.id">
+                            [[district.name]]
+                        </option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1" style="color: black">Category Select</label>
+                    <select class="form-control" id="exampleFormControlSelect1" v-model="form_data.category">
+                        <option value="" selected="selected">Selected Category</option>
+
+                        <option v-bind:value="categorie.id" v-for="categorie in categories" :key="categorie.id">
+                            [[categorie.name]]
+                        </option>
+                    </select>
+                </div>
+
+            </div>
+            <br>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <button class="btn btn-primary">Search</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+
+</div><!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="https://getbootstrap.com/docs/3.3/dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="https://getbootstrap.com/docs/3.3/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script>
+    Vue.component('div_data', {
+        delimiters: ['[[', ']]'],
+        data: function () {
+            return {}
+        },
+        template:
+            `
+            `
+
+    })
+
+    var app = new Vue({
+        el: '#app',
+        delimiters: ['[[', ']]'],
+        data: {
+            message: 'Hello Vue!',
+            divisions: [],
+            districts: [],
+            categories: [],
+            form_data: {
+                division: null,
+                district: null,
+                category: null
+            }
+        },
+        created() {
+            axios.get('http://127.0.0.1:8000/api/data')
+                .then(response => {
+                    {#console.log(response.data.districts)#}
+                    this.divisions = response.data.division
+                    this.categories = response.data.category
+                })
+
+        },
+        methods:{
+            getDistricts(){
+                 axios.get('http://127.0.0.1:8000/api/districts?division='+this.form_data.division)
+                .then(response => {
+                    {#console.log(response.data.districts)#}
+                    this.districts = response.data.districts
+                })
+            }
+        }
+
+    })
+
+</script>
+</body>
+</html>
