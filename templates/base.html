@@ -67,7 +67,8 @@
 
                 <div class="form-group">
                     <label for="exampleFormControlSelect1" style="color: black">Division Select</label>
-                    <select class="form-control" id="exampleFormControlSelect1" v-model="form_data.division" @change="getDistricts()">
+                    <select class="form-control" id="exampleFormControlSelect1" v-model="form_data.division"
+                            @change="getDistricts()">
                         <option value="0"> Division Select</option>
 
                         <option v-bind:value="division.id" v-for="division in divisions" :key="division.id">
@@ -106,13 +107,30 @@
             <br>
             <div class="col-md-3">
                 <div class="form-group">
-                    <button class="btn btn-primary">Search</button>
+                    <button class="btn btn-primary" @click.prevent="getKotha()">Search</button>
                 </div>
 
             </div>
         </form>
     </div>
-
+    <div class="row">
+        <div class="col-md-10">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Title</th>
+                    <th>Districts</th>
+                    <th>Category</th>
+                    <th>Division</th>
+                </tr>
+                <tr v-for="kotha in kotha" :key="kotha.id">
+                    <td>[[kotha.title]]</td>
+                    <td>[[kotha.districts__name]]</td>
+                    <td>[[kotha.category__name]]</td>
+                    <td>[[kotha.districts__division__name]]</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
 </div><!-- /.container -->
 
@@ -133,6 +151,7 @@
         },
         template:
             `
+
             `
 
     })
@@ -145,10 +164,11 @@
             divisions: [],
             districts: [],
             categories: [],
+            kotha: [],
             form_data: {
                 division: null,
                 district: null,
-                category: null
+                category: null,
             }
         },
         created() {
@@ -160,13 +180,21 @@
                 })
 
         },
-        methods:{
-            getDistricts(){
-                 axios.get('http://127.0.0.1:8000/api/districts?division='+this.form_data.division)
-                .then(response => {
-                    {#console.log(response.data.districts)#}
-                    this.districts = response.data.districts
-                })
+        methods: {
+            getDistricts() {
+                axios.get('http://127.0.0.1:8000/api/districts?division=' + this.form_data.division)
+                    .then(response => {
+                        {#console.log(response.data.districts)#}
+                        this.districts = response.data.districts
+                    })
+            },
+            getKotha() {
+                axios.get('http://127.0.0.1:8000/api/kotha?division=' + this.form_data.division + '&category=' + this.form_data.category + '&districts=' + this.form_data.district + '')
+                    .then(response => {
+                        {#console.log(response.data.kotha)#}
+                        this.kotha = response.data.kotha
+
+                    })
             }
         }
 
